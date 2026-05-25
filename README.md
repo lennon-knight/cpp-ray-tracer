@@ -2,7 +2,7 @@
 
 A recursive ray tracer written in C++ from scratch, following Gabriel Gambetta's *Computer Graphics from Scratch*. Renders scenes of spheres with realistic lighting, shadows, and mirror reflections, displayed in real time through SFML 3.
 
-![Final render with reflections](images/final_scene.png)
+![Final render with reflections](images/CppRT1.png)
 
 ## About this project
 
@@ -26,11 +26,11 @@ I implemented every algorithm from the book's pseudocode myself, working through
 
 A render of three spheres on a reflective floor, showing diffuse shading, specular highlights, shadows, and recursive reflections:
 
-![Three spheres on a reflective floor](images/final_scene.png)
+![Three spheres on a reflective floor](images/CppRT2.png)
 
 The same scene without reflections enabled, showing pure Phong shading and shadows:
 
-![Diffuse and specular only](images/no_reflections.png)
+![Diffuse and specular only](images/CppRT3.png)
 
 ## Building
 

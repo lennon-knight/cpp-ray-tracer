@@ -93,6 +93,27 @@ Changing these values and re-running is the fastest way to experiment with the r
 
 - **Multithreading**: This is my first addition to the project outside of the scope of the textbook. Ray tracing is notoriously slow and compute heavy; to chip away at this downside of ray tracing, I have multithreaded the main loop where each ray is "traced". I did this mainly with the execution policy library to automatically handle this repetitive compute heavy loop. This is both faster and cleaner than manually managing threads using the the thread library. I also use other quality-of-life cstd libraries to make thread distribution simpler.
 
+```cpp
+	//Define rows for the image to be split into
+	std::vector<unsigned int> rows(Ch);
+	std::iota(rows.begin(), rows.end(), 0u);
+
+	//Multithreaded: hand the rows into parallel runtime, automatically distributes the rows into multiple threads for concurrent rendering.
+	std::for_each(std::execution::par, rows.begin(), rows.end(),
+		[&](unsigned int py) {
+			// Recover the math-space y for this pixel row
+			int y = half_h - 1 - static_cast<int>(py);
+
+			for (int x = -half_w; x < half_w; ++x) {
+				Vec3 D = CanvasToViewport(x, y);
+				Color c = TraceRay(O, D, 1, INF, recursion_depth);
+
+				unsigned int px = static_cast<unsigned int>(x + half_w);
+				image.setPixel({ px, py }, sf::Color(c.r, c.g, c.b));
+			}
+		});
+
+```
 
 ## What's next
 

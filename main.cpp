@@ -17,6 +17,7 @@ Diffuse(Lambertian) shading
 Specular(Phong) highlights with material - dependent shininess
 Shadow rays
 Recursive mirror reflections with material - dependent reflectivity
+Multithreaded execution - execution par
 */
 
 

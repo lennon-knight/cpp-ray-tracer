@@ -17,11 +17,16 @@ Diffuse(Lambertian) shading
 Specular(Phong) highlights with material - dependent shininess
 Shadow rays
 Recursive mirror reflections with material - dependent reflectivity
-
 */
+
 
 #include<SFML/Graphics.hpp>
 #include "functions.hpp"
+#include <execution>
+#include <algorithm>
+#include <ranges>
+#include <vector>
+#include <numeric>
 
 int main() {
 
@@ -38,21 +43,24 @@ int main() {
 	int half_w = static_cast<int>(Cw) / 2;
 	int half_h = static_cast<int>(Ch) / 2;
 
-	//Iterate through each pixel
-	for (int y = half_h - 1; y >= -half_h; --y) {
-		for (int x = -half_w; x < half_w; ++x) {
+	//Define rows for the image to be split into
+	std::vector<unsigned int> rows(Ch);
+	std::iota(rows.begin(), rows.end(), 0u);
 
-			//Convert pixel coordinate into a 3D direction D
-			Vec3 D = CanvasToViewport(x, y);
-			//Cast a ray from the camera, O, in the direction D, checking for intersections from t = 1 to infity: This is 99 percent of compute time.
-			Color c = TraceRay(O, D, 1, INF, recursion_depth);
+	//Multithreaded: hand the rows into parallel runtime, automatically distributes the rows into multiple threads for concurrent rendering.
+	std::for_each(std::execution::par, rows.begin(), rows.end(),
+		[&](unsigned int py) {
+			// Recover the math-space y for this pixel row
+			int y = half_h - 1 - static_cast<int>(py);
 
-			//Write the pixel to the window
-			unsigned int px = static_cast<unsigned int>(x + half_w);
-			unsigned int py = static_cast<unsigned int>(half_h - 1 - y);
-			image.setPixel({ px, py }, sf::Color(c.r, c.g, c.b));
-		}
-	}
+			for (int x = -half_w; x < half_w; ++x) {
+				Vec3 D = CanvasToViewport(x, y);
+				Color c = TraceRay(O, D, 1, INF, recursion_depth);
+
+				unsigned int px = static_cast<unsigned int>(x + half_w);
+				image.setPixel({ px, py }, sf::Color(c.r, c.g, c.b));
+			}
+		});
 
 	sf::Texture texture(image);
 	sf::Sprite sprite(texture);

@@ -89,6 +89,11 @@ Scene parameters live in `functions.cpp` as `const std::vector<Sphere>` and `con
 
 Changing these values and re-running is the fastest way to experiment with the renderer's behavior.
 
+## Tuning the performance
+
+- **Multithreading**:This is my first addition to the project outside of the scope of the textbook. Ray tracing is notoriously slow and compute heavy; to chip away at this downside of ray tracing, I have multithreaded the main loop where each ray is "traced". I did this mainly with the execution policy library to automatically handle this repetitive compute heavy loop. This is both faster and cleaner than manually managing threads using the the thread library. I also use other quality-of-life cstd libraries to make thread distribution simpler.
+
+
 ## What's next
 
 The book continues into Chapter 5 (arbitrary camera positioning and rotation, transparency, anti-aliasing) which I plan to work through next. Beyond the book, I'm interested in:
@@ -97,12 +102,6 @@ The book continues into Chapter 5 (arbitrary camera positioning and rotation, tr
 - Triangle meshes loaded from OBJ files
 - Bounding volume hierarchies for performance on larger scenes
 - Eventually moving the renderer to the GPU
-
-## Tuning the performance
-
-- **Multithreading**:
-
-This is my first addition to the project outside of the scope of the textbook. Ray tracing is notoriously slow and compute heavy; to chip away at this downside of ray tracing, I have multithreaded the main loop where each ray is "traced". I did this mainly with the execution policy library to automatically handle this repetitive compute heavy loop. This is both faster and cleaner than manually managing threads using the the thread library. I also use other quality-of-life cstd libraries to make thread distribution simpler.
 
 ## Reference
 
